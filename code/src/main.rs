@@ -31,7 +31,7 @@ async fn test() -> impl Responder {
         return HttpResponse::Unauthorized().body("Borked!");
     }
 
-    return HttpResponse::Ok().body("Hello world!");
+    return HttpResponse::Ok().body("Hello world! Test!");
 }
 
 #[get("/")]
