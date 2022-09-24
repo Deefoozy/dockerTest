@@ -2,7 +2,11 @@ version: "3.9"
 services:
   web:
     build:
-      dockerfile: rust.Dockerfile
+      dockerfile: rustDev.Dockerfile
+    volumes:
+      - type: bind
+        source: ./code/target/debug/
+        target: /test_project
     ports:
       - "127.0.0.1:80:80"
     links:
