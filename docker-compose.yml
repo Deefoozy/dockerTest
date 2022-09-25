@@ -3,6 +3,9 @@ services:
   web:
     build:
       dockerfile: rust.Dockerfile
+    user: root
+    volumes:
+      - ./code/target/x86_64-unknown-linux-musl/debug:/etc
     ports:
       - "127.0.0.1:80:80"
     links:
@@ -19,3 +22,5 @@ services:
         max-file: "3"
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"
