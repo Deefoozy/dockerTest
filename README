@@ -1,2 +1,9 @@
-build:
-    cargo build --target x86_64-unknown-linux-musl
+initial build:
+    docker-compose up -d
+
+rebuild:
+    docker-compose stop
+
+    docker-compose build
+
+    docker-compose up -d
