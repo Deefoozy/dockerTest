@@ -28,7 +28,9 @@ async fn test() -> impl Responder {
     let res = banaan().await;
 
     if res.is_err() {
-        return HttpResponse::Unauthorized().body("Borked!");
+        println!("error {}", res.err().unwrap());
+
+        return HttpResponse::Unauthorized().body("Borked");
     }
 
     return HttpResponse::Ok().body("Hello world!");
@@ -66,8 +68,12 @@ async fn banaan() -> Result<(), Error> {
         }
     });
 
-    let _rows = client
+    let stmt = client
         .prepare("CREATE DATABASE test")
+        .await?;
+
+    client
+        .query(&stmt, &[])
         .await?;
 
     Ok(())
