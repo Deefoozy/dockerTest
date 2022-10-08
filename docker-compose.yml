@@ -5,7 +5,8 @@ services:
       dockerfile: rust.Dockerfile
       args:
         # Set the optimalization level and the binary to build in these args
-        - build_profile=dev
+        - build_profile=release
+        - build_folder=release
         - compile_target=test_project
     user: root
     ports:

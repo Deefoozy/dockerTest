@@ -21,6 +21,8 @@ FROM fetch as build
 ARG build_profile=release
 # Name of the binary to build
 ARG compile_target
+# Name of the folders the binaries are located in
+ARG build_folder
 
 WORKDIR /rust-build/
 
@@ -31,7 +33,7 @@ COPY code/src ./src/
 # We already downloaded the dependencies in the 'fetch' step
 # the '--mount type=cache' flag causes the entire target directory to be cached. Speeding up rebuilds considerably
 RUN --mount=type=cache,sharing=private,target=./target \
-    CARGO_HOME=.cargo-home/ cargo build --offline --profile ${build_profile} --bin ${compile_target} && cp ./target/${build_profile}/${compile_target} ./
+    CARGO_HOME=.cargo-home/ cargo build --offline --profile ${build_profile} --bin ${compile_target} && cp ./target/${build_folder}/${compile_target} ./
 
 
 FROM rust:1.63.0-slim as runtime
