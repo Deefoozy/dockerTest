@@ -2,10 +2,12 @@ version: "3.9"
 services:
   web:
     build:
-      dockerfile: rustBuilder.Dockerfile
+      dockerfile: rust.Dockerfile
+      args:
+        # Set the optimalization level and the binary to build in these args
+        - build_profile=dev
+        - compile_target=test_project
     user: root
-    volumes:
-      - ./code/target/x86_64-unknown-linux-musl/debug:/etc
     ports:
       - "127.0.0.1:80:80"
     links:
