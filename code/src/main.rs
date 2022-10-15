@@ -1,10 +1,33 @@
+use std::env::VarError;
+use std::process::exit;
 use actix_web::{get, post, Responder, HttpServer, HttpResponse, App, web};
 use tokio_postgres::{NoTls, Error};
 use tokio;
+use dotenv::dotenv;
+
+fn check_env_key(key: &str) -> String {
+    let result:Result<String,VarError> = std::env::var(key);
+
+    if result.is_err() {
+        println!("Key {} is missing", key.to_string());
+
+        exit(1);
+    }
+
+    result.unwrap()
+}
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    println!("Hello, world!!");
+    println!("Loading ENV");
+
+    dotenv().ok();
+    check_env_key("DB_USER");
+    check_env_key("DB_PASSWORD");
+
+    println!("Loaded ENV");
+    println!("Starting server");
+
     HttpServer::new(|| {
         App::new()
             .service(test)
@@ -25,7 +48,7 @@ async fn main() -> std::io::Result<()> {
 async fn test() -> impl Responder {
     println!("Get");
 
-    let res = banaan().await;
+    let res:Result<(),Error> = banaan().await;
 
     if res.is_err() {
         return HttpResponse::Unauthorized().body("Borked!");
@@ -56,9 +79,12 @@ async fn post_counter(req_body: String, counter_id: String) -> impl Responder {
 }
 
 async fn banaan() -> Result<(), Error> {
+    let user:String = check_env_key("DB_USER");
+    let password:String = check_env_key("DB_PASSWORD");
+
     // Connect to the database.
     let (client, connection) =
-        tokio_postgres::connect("host=postgres user=testboi password=testboi", NoTls).await?;
+        tokio_postgres::connect(format!("host=postgres user={} password={}", user, password).as_str(), NoTls).await?;
 
     tokio::spawn(async move {
         if let Err(e) = connection.await {
