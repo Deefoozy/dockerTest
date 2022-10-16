@@ -8,7 +8,7 @@ fn check_env_key(key: &str) -> String {
     let result:Result<String,VarError> = std::env::var(key);
 
     result.expect(
-        format!("Key \"{}\" is", key.to_string())
+        format!("Key \"{}\" has an issue", key.to_string())
             .as_str()
     )
 }
