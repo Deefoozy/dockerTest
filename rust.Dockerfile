@@ -39,7 +39,15 @@ RUN --mount=type=cache,sharing=private,target=./target \
 FROM rust:1.63.0-slim as runtime
 ARG compile_target
 
-COPY --from=build ./rust-build/${compile_target} ./
+RUN adduser rust-runner
+USER rust-runner
+RUN mkdir ~/rust-application/
 
-EXPOSE 80
-ENTRYPOINT ./${compile_target}
+WORKDIR /home/rust-runner/rust-application/
+
+COPY --from=build --chown=rust-runner:rust-runner /rust-build/${compile_target} /home/rust-runner/rust-application/rust-app
+
+RUN whoami && ls -la ~/rust-application/ && cd ~/rust-application/ && echo ${compile_target} && sleep 11s
+
+EXPOSE 3096
+ENTRYPOINT /home/rust-runner/rust-application/rust-app
