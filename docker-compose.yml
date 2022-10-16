@@ -2,10 +2,8 @@ version: "3.9"
 services:
   web:
     build:
-      dockerfile: rust.Dockerfile
+      dockerfile: rustBuilder.Dockerfile
     user: root
-    volumes:
-      - ./code/target/x86_64-unknown-linux-musl/debug:/etc
     ports:
       - "127.0.0.1:80:80"
     links:
