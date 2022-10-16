@@ -2,10 +2,14 @@ version: "3.9"
 services:
   web:
     build:
-      dockerfile: rustBuilder.Dockerfile
-    user: root
+      dockerfile: rust.Dockerfile
+      args:
+        # Set the optimalization level and the binary to build in these args
+        - build_profile=release
+        - build_folder=release
+        - compile_target=test_project
     ports:
-      - "127.0.0.1:80:80"
+      - "127.0.0.1:80:3096"
     links:
       - postgres
     env_file:
@@ -21,6 +25,6 @@ services:
         max-size: 10m
         max-file: "3"
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - ./docker/postgres/postgres-data:/var/lib/postgresql/data
     ports:
       - "127.0.0.1:5432:5432"
