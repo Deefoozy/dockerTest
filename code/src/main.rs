@@ -7,13 +7,10 @@ use tokio;
 fn check_env_key(key: &str) -> String {
     let result:Result<String,VarError> = std::env::var(key);
 
-    if result.is_err() {
-        println!("Key {} is missing", key.to_string());
-
-        exit(1);
-    }
-
-    result.unwrap()
+    result.expect(
+        format!("Key \"{}\" is", key.to_string())
+            .as_str()
+    )
 }
 
 #[actix_web::main]
