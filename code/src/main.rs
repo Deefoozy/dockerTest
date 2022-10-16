@@ -3,7 +3,6 @@ use std::process::exit;
 use actix_web::{get, post, Responder, HttpServer, HttpResponse, App, web};
 use tokio_postgres::{NoTls, Error};
 use tokio;
-use dotenv::dotenv;
 
 fn check_env_key(key: &str) -> String {
     let result:Result<String,VarError> = std::env::var(key);
@@ -19,13 +18,9 @@ fn check_env_key(key: &str) -> String {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    println!("Loading ENV");
-
-    dotenv().ok();
     check_env_key("DB_USER");
     check_env_key("DB_PASSWORD");
 
-    println!("Loaded ENV");
     println!("Starting server");
 
     HttpServer::new(|| {
@@ -37,7 +32,6 @@ async fn main() -> std::io::Result<()> {
                     .service(get_counter)
                     .service(post_counter)
             )
-
     })
     .bind(("0.0.0.0", 80))?
     .run()
