@@ -39,7 +39,7 @@ async fn main() -> std::io::Result<()> {
 async fn test() -> impl Responder {
     println!("Get");
 
-    let res:Result<(),Error> = banaan().await;
+    let res:Result<(),Error> = db_test().await;
 
     if res.is_err() {
         return HttpResponse::Unauthorized().body("Borked!");
@@ -59,17 +59,17 @@ async fn get_counters() -> impl Responder {
 async fn get_counter(counter_id: String) -> impl Responder {
     println!("Get counter");
 
-    HttpResponse::Ok().body("Hello world! ".to_owned() + &counter_id)
+    HttpResponse::Ok().body(format!("Hello world! {}", counter_id))
 }
 
 #[post("/{counter_id}")]
 async fn post_counter(req_body: String, counter_id: String) -> impl Responder {
     println!("Post counters");
 
-    HttpResponse::Ok().body("Hello world! ".to_owned() + &req_body + &" " + &counter_id)
+    HttpResponse::Ok().body(format!("Hello world! {} | {}", req_body, counter_id))
 }
 
-async fn banaan() -> Result<(), Error> {
+async fn db_test() -> Result<(), Error> {
     let user:String = check_env_key("DB_USER");
     let password:String = check_env_key("DB_PASSWORD");
 
